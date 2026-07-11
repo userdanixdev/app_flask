@@ -1,0 +1,28 @@
+# Ambiente virtual
+app_flask_test/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Flask
+instance/
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
