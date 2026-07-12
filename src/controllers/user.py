@@ -3,15 +3,30 @@ from src.app import User, db
 from http import HTTPStatus
 from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash
+from flask_jwt_extended import jwt_required, get_jwt_identity
 # localhost: 5000/users
 app = Blueprint('user', __name__, url_prefix="/users")
 
 def _create_user():
-    data = request.json
+    data = request.get_json()
+    if not data:
+        return {"error":"JSON inválido"}, HTTPStatus.BAD_REQUEST
+    # Isso evita erros quando o cliente envia um JSON inválido.
     user = User(username=data["username"],
-                email=data["email"])
-    db.session.add(user)
-    db.session.commit()
+                email=data["email"],
+                password=generate_password_hash(data["password"])
+                )
+    
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return {
+            "error":"Usuário já existe"
+        }, HTTPStatus.CONFLICT      
+    return user  
 
 def _list_users():
     query = db.select(User)
@@ -26,12 +41,19 @@ def _list_users():
 
 
 @app.route('/', methods=['GET','POST'])
+@jwt_required()
 def handle_user():
     if request.method == 'POST':
-        _create_user()
-        return {'message': 'User created'}, HTTPStatus.CREATED
-    else:
-        return {'users':_list_users()}
+        result = _create_user()
+        if isinstance(result, tuple):
+            return result
+        
+        return {
+            "id":result.id,
+            "username":result.username,
+            "email":result.email
+        }, HTTPStatus.CREATED
+    return {'identity':get_jwt_identity(),'users':_list_users()}
 
 @app.route('/<int:user_id>')     
 def get_user(user_id):

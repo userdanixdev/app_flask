@@ -6,6 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import declarative_base
 from flask_migrate import Migrate
 from sqlalchemy import Boolean
+# Adicona JWT
+from flask_jwt_extended import JWTManager
+
 
 # A biblioteca: "os" ajuda a manipular pastas e caminhos para o projeto.
 # "Flask" -> cria a aplicação web
@@ -18,6 +21,8 @@ from sqlalchemy import Boolean
 
 db = SQLAlchemy()
 migrate = Migrate()
+# Declarar a variável JWT, SETUP:
+jwt = JWTManager()
 
 from sqlalchemy import Integer, String, func, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
@@ -29,9 +34,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 class User(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key = True)
     username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(String)
+    email: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     active: Mapped[bool] = mapped_column(Boolean, default = True)
-
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, username={self.username!r},active={self.active!r})"
     
@@ -62,6 +67,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY = "dev",
         SQLALCHEMY_DATABASE_URI="sqlite:///banco_2.sqlite",
+        ## Adicona secret-key-jwt aqui (SETUP):
+        JWT_SECRET_KEY = "super-secret",
     )
     if test_config is None:
         app.config.from_pyfile("config.py",silent=True)
@@ -76,14 +83,17 @@ def create_app(test_config=None):
     db.init_app(app)
     app.cli.add_command(init_db_command)
     migrate.init_app(app, db)
+    # Adiciona o JWT aqui (SETUP):
+    jwt.init_app(app)
     
 # Iniciar a extensão
     @app.route("/")
     def index():
         return "<h1>Aplicação Flask funcionando!</h1>"
-    from src.controllers import user, post
+    from src.controllers import user, post,auth
     
     app.register_blueprint(user.app)
+    app.register_blueprint(auth.auth_bp)
     return app                        
 
 # Registrar o app:
