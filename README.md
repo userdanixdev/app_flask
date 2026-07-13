@@ -254,10 +254,16 @@ O foco principal foi compreender a arquitetura do Flask, o funcionamento do SQLA
 
 ---
 
+## 🔐 Autenticação JWT
+
+A autenticação da API foi implementada na versão **v0.1.0**.
+
+📖 Consulte os detalhes da implementação na **Release v0.1.0**:
+https://github.com/userdanixdev/app_flask/releases/tag/v0.1.0
+
+
 # Próximos passos
 
-* Implementação de autenticação com JWT
-* Login de usuários
 * Hash de senhas com Werkzeug
 * Validação de dados com Pydantic
 * Testes automatizados com Pytest
