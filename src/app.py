@@ -25,10 +25,19 @@ migrate = Migrate()
 jwt = JWTManager()
 
 from sqlalchemy import Integer, String, func, ForeignKey, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 # Esse é o padrão moderno do SQLAlchemy 2.x.
 # Dessa forma o 'mapped' declara e mapeia a tipagem de linguagem de programação Python
 # O "mapped_column" declara a tipagem tipo SQL
+
+class Role(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key = True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    # Atualização para mapear permissões:
+    user: Mapped[list["User"]] = relationship(back_populates="role")
+
+    def __repr__(self) -> str:
+        return f"Role(id={self.id!r}, name={self.name!r})"
 
 
 class User(db.Model):
@@ -37,6 +46,10 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     active: Mapped[bool] = mapped_column(Boolean, default = True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Atualização para mapear permissões:
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"),nullable=True)
+    role: Mapped["Role"] = relationship(back_populates="user")
+
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, username={self.username!r},active={self.active!r})"
     
@@ -90,10 +103,11 @@ def create_app(test_config=None):
     @app.route("/")
     def index():
         return "<h1>Aplicação Flask funcionando!</h1>"
-    from src.controllers import user, post,auth
+    from src.controllers import user, post,auth,role
     
     app.register_blueprint(user.app)
     app.register_blueprint(auth.auth_bp)
+    app.register_blueprint(role.app)
     return app                        
 
 # Registrar o app:

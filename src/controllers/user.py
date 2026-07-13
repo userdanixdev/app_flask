@@ -8,14 +8,16 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 # localhost: 5000/users
 app = Blueprint('user', __name__, url_prefix="/users")
 
-def _create_user():
+@app.route("/", methods=["POST"])
+def create_user():
     data = request.get_json()
     if not data:
         return {"error":"JSON inválido"}, HTTPStatus.BAD_REQUEST
     # Isso evita erros quando o cliente envia um JSON inválido.
     user = User(username=data["username"],
                 email=data["email"],
-                password=generate_password_hash(data["password"])
+                password=generate_password_hash(data["password"]),
+                role_id=data["role_id"],
                 )
     
     try:
@@ -26,34 +28,47 @@ def _create_user():
         return {
             "error":"Usuário já existe"
         }, HTTPStatus.CONFLICT      
-    return user  
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "role_id": user.role_id
+    }, HTTPStatus.CREATED  
 
-def _list_users():
+@app.route("/", methods=["GET"])
+@jwt_required()
+def list_users():
     query = db.select(User)
     users = db.session.execute(query).scalars()
-    return [
-        {
-            'id':user.id,
-            'username':user.username,
-        }
-        for user in users
-    ]            
+    return {
+        "identity": get_jwt_identity(),
+        "users":[
+            {
+                'id':user.id,
+                'username':user.username,
+                'role_id': user.role_id,
+                'role': {
+                    "id": user.role.id,
+                    "name": user.role.name,
+                } if user.role else {"id": None,"name":"sem_permissão"}
+            }                                 
+            for user in users
+        ]            
+    }, HTTPStatus.OK
 
-
-@app.route('/', methods=['GET','POST'])
-@jwt_required()
-def handle_user():
-    if request.method == 'POST':
-        result = _create_user()
-        if isinstance(result, tuple):
-            return result
-        
-        return {
-            "id":result.id,
-            "username":result.username,
-            "email":result.email
-        }, HTTPStatus.CREATED
-    return {'identity':get_jwt_identity(),'users':_list_users()}
+#@app.route('/', methods=['GET','POST'])
+#@jwt_required()
+#def handle_user():
+#    if request.method == 'POST':
+#        result = _create_user()
+#        if isinstance(result, tuple):
+#        
+#        return {
+#            "id":result.id,
+#            "username":result.username,
+#            "email":result.email
+#        }, HTTPStatus.CREATED
+#    return {'identity':get_jwt_identity(),'users':_list_users()}
 
 @app.route('/<int:user_id>')     
 def get_user(user_id):
