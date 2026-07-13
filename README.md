@@ -261,15 +261,13 @@ A autenticação da API foi implementada na versão **v0.1.0**.
 📖 Consulte os detalhes da implementação na **Release v0.1.0**:
 https://github.com/userdanixdev/app_flask/releases/tag/v0.1.0
 
+### 🔐 Autenticação JWT: Estrutura de Autorização e Gerenciamento de Roles
 
-# Próximos passos
+Nesta versão foi implementada a estrutura inicial de autorização baseada em roles, preparando a aplicação para controle de acesso por nível de permissão.
 
-* Hash de senhas com Werkzeug
-* Validação de dados com Pydantic
-* Testes automatizados com Pytest
-* Docker
-* Documentação da API com Swagger/OpenAPI
-* Deploy da aplicação
+📖 Consulte os detalhes da implementação na **Release v0.2.0**:
+https://github.com/userdanixdev/app_flask/releases/tag/v0.2.0
+
 
 ---
 
