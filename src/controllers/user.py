@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from src.controllers.decorator import requires_role
 # localhost: 5000/users
 app = Blueprint('user', __name__, url_prefix="/users")
 
@@ -37,6 +38,7 @@ def create_user():
 
 @app.route("/", methods=["GET"])
 @jwt_required()
+@requires_role("admin")
 def list_users():
     query = db.select(User)
     users = db.session.execute(query).scalars()
@@ -70,7 +72,9 @@ def list_users():
 #        }, HTTPStatus.CREATED
 #    return {'identity':get_jwt_identity(),'users':_list_users()}
 
-@app.route('/<int:user_id>')     
+@app.route('/<int:user_id>')   
+@jwt_required()
+@requires_role("admin")  
 def get_user(user_id):
     user = db.get_or_404(User, user_id)
     return {
@@ -79,7 +83,9 @@ def get_user(user_id):
          "email": user.email
     }
 
-@app.route('/<int:user_id>', methods=["PATCH"])     
+@app.route('/<int:user_id>', methods=["PATCH"])   
+@jwt_required()
+@requires_role("admin")  
 def update_user(user_id):
     user = db.get_or_404(User, user_id)
     data = request.json
@@ -91,7 +97,7 @@ def update_user(user_id):
         db.session.commit()
 
     except IntegrityError:
-        db.session.rollback
+        db.session.rollback()
         return {
             'error':'username already exists'
         }, 409
@@ -102,6 +108,8 @@ def update_user(user_id):
     }
 
 @app.route("/<int:user_id>", methods=['DELETE'])
+@jwt_required()
+@requires_role("admin")
 def delete_user(user_id):
     user = db.get_or_404(User, user_id)
 
