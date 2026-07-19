@@ -43,17 +43,10 @@ Embora seja um projeto de estudos, sua estrutura segue padrões próximos aos en
 ## Banco de dados
 
 * Integração com SQLite
-
 * Modelagem utilizando SQLAlchemy ORM
-
 * Criação das entidades:
-
 * User
-
-* Post
-
 * Relacionamentos utilizando Foreign Keys
-
 * Migrações com Alembic
 
 ---
@@ -268,6 +261,12 @@ Nesta versão foi implementada a estrutura inicial de autorização baseada em r
 📖 Consulte os detalhes da implementação na **Release v0.2.0**:
 https://github.com/userdanixdev/app_flask/releases/tag/v0.2.0
 
+### 🔐 Autorização: Decoradores ( Permissões )
+
+Nessa feature temos a implementação do decorator `@requires_role()`. e controle de acesso baseado em Roles.
+
+📖 Consulte os detalhes da implementação na **Release v0.3.0**:
+https://github.com/userdanixdev/app_flask/releases/tag/v0.3.0
 
 ---
 

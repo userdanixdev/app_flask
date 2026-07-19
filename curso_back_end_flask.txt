@@ -1,0 +1,50 @@
+{
+    "username": "dar",
+    "password": "123456"
+}
+
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4Mzk2MzA0NiwianRpIjoiZDk5YTUyYzItZTdhYi00NGJlLWI4Y2MtYTJmYTBiNzhiMzQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3ODM5NjMwNDYsImNzcmYiOiI3ZjFkNDhhNi02Zjk5LTRjOTItODRhNi0xZWVhMjgzMmYxZDkiLCJleHAiOjE3ODM5NjM5NDZ9.HUJtm4aDqxvd8Y-R56nh9-D5LI5SieLgMzUHQR5YxTA"
+}
+
+
+Envia o token de acesso ao POST rota roles que a role será criada.
+
+Agora com a estrutura do banco atualizada será necessário passar o role_id para criar um usuário.
+
+Refactoring:
+
+A requisição cria um novo usuário sem exigir TOKEN.
+
+{
+    "username": "test",
+    "email": "test@email.com",
+    "password": "1234",
+    "role_id": 1
+}
+
+2. Realizar LOGIN:
+
+2.1 -> usando o usuário criado acima, 'test'
+	2.2 -> recebe o TOKEN: 
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4Mzk3MTcwNSwianRpIjoiMzI4NTI5MDItYjlkMy00NTc4LWFjNjQtMzAyNzc4ZTk2Y2Y3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3ODM5NzE3MDUsImNzcmYiOiIwY2FhMDhiNy0xZmM5LTRkODktYjg5Ni1iNWRmMjU3ODE4MjAiLCJleHAiOjE3ODM5NzI2MDV9.NI27LAqWq_q1EfxBaEUWu-x8v04gfHCyQ_2pwIO2bNY
+
+A partir do LOGIN o usuário pode LISTAR usuários:
+
+para listar usuários é necessário: username, password and role_id: 1
+
+
+git tag -a v0.1.0 -m "Release v0.2.0 - Autenticação JWT" 
+
+# Entidade Post:
+
+
+
+# Adidionar a entidade Post que permite usuários autenticados criarem publicações.
+# Cada post pertence a um usuário e um usuário pode ter vários posts.
+# Administradores possuem acesso total, enquanto usuários comuns podem modificar apenas seus próprios posts.
+
+
+Antes mesmo de criar o controller post.py, eu implementaria o model Post e o relacionamento com User, 
+faria a migração com Alembic e testaria se o banco ficou correto. Só depois partiria para os endpoints.
