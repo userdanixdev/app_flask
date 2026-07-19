@@ -247,6 +247,119 @@ O foco principal foi compreender a arquitetura do Flask, o funcionamento do SQLA
 
 ---
 
+# SQLite vs PostgreSQL
+
+## SQLite
+
+O **SQLite** é um banco de dados relacional embarcado (embedded), armazenando todas as informações em um único arquivo local (`.sqlite`).
+
+### Quando utilizar
+
+- Estudos e aprendizado
+- Desenvolvimento local
+- Protótipos
+- Aplicações pequenas
+- Testes automatizados
+- Sistemas com poucos acessos simultâneos
+
+### Vantagens
+
+- Não requer instalação de servidor
+- Configuração simples
+- Leve e rápido para pequenos projetos
+- Fácil de transportar (apenas um arquivo)
+- Integração simples com Flask e SQLAlchemy
+
+### Desvantagens
+
+- Baixa concorrência para escrita
+- Escalabilidade limitada
+- Recursos avançados reduzidos
+- Não recomendado para aplicações com muitos usuários
+
+---
+
+## PostgreSQL
+
+O **PostgreSQL** é um Sistema Gerenciador de Banco de Dados (SGBD) cliente-servidor, projetado para aplicações de médio e grande porte.
+
+### Quando utilizar
+
+- APIs REST em produção
+- Sistemas corporativos
+- Aplicações com muitos usuários simultâneos
+- Projetos escaláveis
+- Ambientes em nuvem (AWS, Azure, GCP)
+
+### Vantagens
+
+- Alta performance
+- Excelente concorrência
+- Grande escalabilidade
+- Controle de usuários e permissões
+- Transações robustas (ACID)
+- Backup e recuperação
+- Suporte a JSON, Arrays, UUID e outros tipos avançados
+
+### Desvantagens
+
+- Requer instalação e configuração
+- Administração mais complexa
+- Maior consumo de recursos
+
+---
+
+# Comparação
+
+| Característica | SQLite | PostgreSQL |
+|----------------|--------|------------|
+| Instalação | Não necessita servidor | Necessita servidor |
+| Armazenamento | Arquivo local (.sqlite) | Banco em servidor |
+| Configuração | Muito simples | Mais complexa |
+| Performance | Boa para projetos pequenos | Excelente para projetos médios e grandes |
+| Concorrência | Limitada | Alta |
+| Escalabilidade | Baixa | Alta |
+| Recursos avançados | Básicos | Avançados |
+| Produção | Apenas aplicações simples | Recomendado |
+
+---
+
+# SQLAlchemy facilita a migração
+
+Uma das principais vantagens do **SQLAlchemy ORM** é abstrair a comunicação com o banco de dados.
+
+Os modelos permanecem praticamente iguais:
+
+```python
+class User(db.Model):
+    id = mapped_column(Integer, primary_key=True)
+    username = mapped_column(String)
+```
+
+Na maioria dos casos, a principal alteração ocorre apenas na string de conexão.
+
+SQLite:
+
+```python
+SQLALCHEMY_DATABASE_URI = "sqlite:///app.sqlite"
+```
+
+PostgreSQL:
+
+```python
+SQLALCHEMY_DATABASE_URI = (
+    "postgresql://usuario:senha@localhost:5432/app_flask"
+)
+```
+
+---
+
+# Resumo
+
+- **SQLite** é ideal para estudos, desenvolvimento local e pequenos projetos.
+- **PostgreSQL** é recomendado para aplicações em produção, com maior volume de dados, múltiplos usuários e necessidade de escalabilidade.
+- Utilizando **SQLAlchemy ORM**, é possível migrar entre os dois bancos com poucas alterações no código da aplicação.
+
 ## 🔐 Autenticação JWT
 
 A autenticação da API foi implementada na versão **v0.1.0**.

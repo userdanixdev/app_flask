@@ -26,3 +26,5 @@ instance/
 # Sistema
 .DS_Store
 Thumbs.db
+
+anotacoes_flask.txt
