@@ -410,7 +410,9 @@ Implementação da entidade **Post**, permitindo que usuários autenticados crie
 | `PUT`    | `/posts/<id>` | Atualizar um post     |
 | `DELETE` | `/posts/<id>` | Excluir um post       |
 
+📖 Consulte os detalhes da implementação na **Release v0.4.0**:
 
+https://github.com/userdanixdev/app_flask/releases/tag/v0.4.0
 
 ## Autor
 
