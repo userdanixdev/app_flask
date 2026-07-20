@@ -5,9 +5,10 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import declarative_base
 from flask_migrate import Migrate
-from sqlalchemy import Boolean
+from sqlalchemy import Boolean, Text
 # Adicona JWT
 from flask_jwt_extended import JWTManager
+
 
 
 # A biblioteca: "os" ajuda a manipular pastas e caminhos para o projeto.
@@ -50,20 +51,20 @@ class User(db.Model):
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"),nullable=True)
     role: Mapped["Role"] = relationship(back_populates="user")
 
-    def __repr__(self) -> str:
-        return f"User(id={self.id!r}, username={self.username!r},active={self.active!r})"
-    
-
+    # Nova versão do banco: Entidade POST
+    posts: Mapped[list["Post"]] = relationship(back_populates="author")
+# Nova classe Post:
 class Post(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key = True)
-    title: Mapped[str]= mapped_column(String, nullable=False)
-    body: Mapped[str]=mapped_column(String, nullable=False)
-    created: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    author_id: Mapped[int]= mapped_column(ForeignKey('user.id'))
+    id: Mapped[int]= mapped_column(Integer, primary_key=True)  
+    title:Mapped[str] = mapped_column(String,nullable=False)
+    body:Mapped[str]= mapped_column(Text,nullable=False)
+    created:Mapped[datetime]=mapped_column(DateTime, server_default=func.now())
+    author_id:Mapped[int]=mapped_column(ForeignKey("user.id"))
+    author:Mapped["User"]=relationship(back_populates="posts")  
 
+    def __repr__(self) -> str:
+        return f"Post(id={self.id!r}, title={self.title!r},author_id={self.author_id!r})"
     
-    def __repr__(self:str):
-        return f"Post(id={self.id!r}, username={self.title!r}, author_id={self.author_id!r})"
 
 @click.command("init-db")
 def init_db_command():
@@ -77,6 +78,7 @@ def create_app(test_config=None):
     # Criação e configuração do app com Flask:
     # Application Factory Pattern.
     app = Flask(__name__, instance_relative_config=True)
+    app.json.ensure_asccii = False
     app.config.from_mapping(
         SECRET_KEY = "dev",
         SQLALCHEMY_DATABASE_URI="sqlite:///banco_2.sqlite",
@@ -108,6 +110,7 @@ def create_app(test_config=None):
     app.register_blueprint(user.app)
     app.register_blueprint(auth.auth_bp)
     app.register_blueprint(role.app)
+    app.register_blueprint(post.app)
     return app                        
 
 # Registrar o app:

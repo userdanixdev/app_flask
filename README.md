@@ -383,6 +383,35 @@ https://github.com/userdanixdev/app_flask/releases/tag/v0.3.0
 
 ---
 
+## 🚀 Nova Funcionalidade - Posts
+
+### ✨ O que foi adicionado
+
+Implementação da entidade **Post**, permitindo que usuários autenticados criem e gerenciem publicações na API.
+
+### Funcionalidades
+
+* Implementação do modelo `Post`.
+* Relacionamento **User ↔ Post** (1:N).
+* CRUD de Posts.
+* Associação automática do post ao usuário autenticado.
+* Controle de autorização para edição e exclusão de posts.
+* Administradores possuem acesso total.
+* Usuários comuns podem modificar apenas os próprios posts.
+* Integração com autenticação JWT.
+
+### Endpoints
+
+| Método   | Endpoint      | Descrição             |
+| -------- | ------------- | --------------------- |
+| `POST`   | `/posts`      | Criar um novo post    |
+| `GET`    | `/posts`      | Listar todos os posts |
+| `GET`    | `/posts/<id>` | Buscar um post por ID |
+| `PUT`    | `/posts/<id>` | Atualizar um post     |
+| `DELETE` | `/posts/<id>` | Excluir um post       |
+
+
+
 ## Autor
 
 Desenvolvido por **Daniel** como projeto de estudos em Flask e desenvolvimento Backend com Python.
