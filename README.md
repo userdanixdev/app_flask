@@ -504,7 +504,7 @@ SQLALCHEMY_DATABASE_URI = (
 
 > Implementação e organização da estrutura de testes de integração utilizando Pytest, fixtures e banco SQLite em memória.
 
-# Objetivo
+## Objetivo
 
 Este projeto foi desenvolvido exclusivamente para fins de estudo e evolução prática em desenvolvimento backend com Python.
 
