@@ -1,10 +1,15 @@
-# Flask API - Estudos com Flask, SQLAlchemy e Alembic
+# Flask API - Estudos com Flask, SQLAlchemy, Alembic, Autenticação, Autorização e Testes
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
 ![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-red)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-red?logo=sqlalchemy)
+![Alembic](https://img.shields.io/badge/Alembic-Migrations-orange)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite)
-![License](https://img.shields.io/badge/license-MIT-green)
+![JWT](https://img.shields.io/badge/JWT-Authentication-purple?logo=jsonwebtokens)
+![Pytest](https://img.shields.io/badge/Pytest-Tests-0A9EDC?logo=pytest)
+![REST%20API](https://img.shields.io/badge/API-REST-02569B)
+![Poetry](https://img.shields.io/badge/Poetry-Dependency%20Management-60A5FA?logo=poetry)
+![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?logo=git)
 
 ## Sobre o projeto
 
@@ -86,7 +91,7 @@ Formato utilizado:
 
 A implementação inicial da autenticação está documentada na:
 
-[Release v0.1.0 — Autenticação JWT](https://github.com/userdanixdev/app_flask/releases#release-v0.1.0)
+[Release v0.1.0 - Autenticação JWT](https://github.com/userdanixdev/app_flask/releases#release-v0.1.0)
 
 ## Autorização baseada em Roles
 
@@ -96,7 +101,7 @@ Foi implementada uma estrutura de autorização baseada em Roles.
 
 A estrutura foi introduzida na:
 
-[Release v0.2.0 — Estrutura de Roles](https://github.com/userdanixdev/app_flask/releases#release-v0.2.0)
+[Release v0.2.0 - Estrutura de Roles](https://github.com/userdanixdev/app_flask/releases#release-v0.2.0)
 
 ## Decorator de permissões:
 
@@ -116,7 +121,7 @@ def update_user():
     ...
 ```
 
-A implementação foi adicionada na [Release v0.3.0 — Controle de permissões](https://github.com/userdanixdev/app_flask/releases#release-v0.3.0)
+A implementação foi adicionada na [Release v0.3.0 - Controle de permissões](https://github.com/userdanixdev/app_flask/releases#release-v0.3.0)
 
 ## Posts:
 
@@ -147,7 +152,7 @@ DELETE|	/posts/|<id>	Excluir Post
 
 A implementação dos Posts foi documentada na:
 
-[Release v0.4.0 — Posts e Controle de Acesso](https://github.com/userdanixdev/app_flask/releases#release-v0.4.0)
+[Release v0.4.0 - Posts e Controle de Acesso](https://github.com/userdanixdev/app_flask/releases#release-v0.4.0)
 
 ## Usuários:
 
@@ -215,7 +220,7 @@ Os testes verificam diferentes cenários, incluindo:
 - criação de Roles;
 - duplicidade de Roles.
 
-Recursos estudados
+## Recursos estudados:
 
 Durante o desenvolvimento foram praticados conceitos importantes do ecossistema Flask:
 
@@ -269,12 +274,11 @@ app_flask/
 │           ├── test_role.py
 │           └── test_user.py
 │
-├── instance/
 │
 ├── pyproject.toml
 ├── poetry.lock
 ├── README.md
-└── hello.py
+
 ```
 ## Migrações:
 
@@ -365,12 +369,6 @@ Body:
 POST /posts/
 ```
 > O usuário autenticado é associado automaticamente ao Post.
-
-# Objetivo
-
-Este projeto foi desenvolvido exclusivamente para fins de estudo e evolução prática em desenvolvimento backend com Python.
-
-O foco principal foi compreender a arquitetura do Flask, o funcionamento do SQLAlchemy, a criação de APIs REST e a organização de aplicações escaláveis seguindo boas práticas do ecossistema Python.
 
 ---
 
@@ -494,17 +492,22 @@ SQLALCHEMY_DATABASE_URI = (
 
 > Implementação do decorator para controle de acesso baseado em Roles.
 
-```@requires_role()```
-
 [- v0.4.0 - Posts](https://github.com/userdanixdev/app_flask/releases#release-v0.4.0)
 
 > Implementação da entidade Post, CRUD completo, relacionamento User ↔ Post e regras de autorização.
 
-- v0.5.0 - Testes de integração
+[- v0.5.0 - Testes de integração](https://github.com/userdanixdev/app_flask/releases/tag/v0.5.0)
 
 > Implementação e organização da estrutura de testes de integração utilizando Pytest, fixtures e banco SQLite em memória.
 
+# Objetivo
+
+Este projeto foi desenvolvido exclusivamente para fins de estudo e evolução prática em desenvolvimento backend com Python.
+
+*O foco principal foi compreender a arquitetura do Flask, o funcionamento do SQLAlchemy, a criação de APIs REST e a organização de aplicações escaláveis seguindo boas práticas do ecossistema Python.*
+
+
 ## Autor:
 
-*Desenvolvido por Daniel como projeto de estudos em Flask, desenvolvimento Backend com Python, SQLAlchemy, autenticação, autorização e testes automatizados.*
+*Desenvolvido por Daniel M. França como projeto de estudos em Flask, desenvolvimento Backend com Python, SQLAlchemy, autenticação, autorização e testes automatizados.*
 
