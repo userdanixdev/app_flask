@@ -284,6 +284,11 @@ app_flask/
 ├── README.md
 
 ```
+
+## Segue o fluxo da API Flask:
+
+![Flask](../app_flask/src/views/fluxo.png)
+
 ## Migrações:
 
 O controle da estrutura do banco é realizado utilizando ```Flask-Migrate/Alembic.```
