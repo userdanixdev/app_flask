@@ -186,6 +186,10 @@ O arquivo conftest.py centraliza fixtures utilizadas pelos testes, incluindo:
 - segundo usuário comum;
 - tokens JWT.
 
+A implementação dos Testes foi documentada na:
+
+[Release v0.5.0 - Testes de Integração e Qualidade](https://github.com/userdanixdev/app_flask/releases/tag/v0.5.0)
+
 Exemplo:
 ```
 tests/
