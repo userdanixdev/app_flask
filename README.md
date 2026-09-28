@@ -10,13 +10,11 @@
 
 Este projeto foi desenvolvido com o objetivo de estudar os principais conceitos do framework **Flask** para desenvolvimento de aplicações web e APIs REST utilizando Python.
 
-Durante o desenvolvimento foram aplicadas diversas boas práticas utilizadas em projetos reais, como organização em módulos, utilização do padrão **Application Factory**, separação das rotas através de **Blueprints**, integração com banco de dados utilizando **Flask-SQLAlchemy** e controle de versões do banco com **Flask-Migrate (Alembic)**.
+Durante o desenvolvimento foram aplicadas diversas boas práticas utilizadas em projetos reais, como organização em módulos, utilização do padrão **Application Factory**, separação das rotas através de **Blueprints**, integração com banco de dados  utilizando **Flask-SQLAlchemy** e controle de versões do banco com **Flask-Migrate (Alembic)**. 
+mbora seja um projeto de estudos , sua estrutura segue padrões próximos aos encontrados em * aplicações profissionaisde.dedede  
 
-Embora seja um projeto de estudos, sua estrutura segue padrões próximos aos encontrados em aplicações profissionais.
-
----
-
-# Tecnologias utilizadas
+*  
+*# Tecnologias utilizadas*** 
 
 * Python
 * Flask
@@ -26,12 +24,12 @@ Embora seja um projeto de estudos, sua estrutura segue padrões próximos aos en
 * Alembic
 * SQLite
 * Click (CLI)
-* Git
-* GitHub
+* Flask-JWT-Extended
+* Pytest
+* pytest-mock
+* Poetry
 
 ---
-
-# Funcionalidades implementadas
 
 ## Estrutura da aplicação
 
@@ -39,75 +37,237 @@ Embora seja um projeto de estudos, sua estrutura segue padrões próximos aos en
 * Organização em módulos
 * Blueprints
 * Configuração centralizada da aplicação
+* separação entre controllers e modelos
+* ORM para acesso ao banco;
+* migrations para controle da estrutura do banco;
+* autenticação e autorização;
+* testes de integração.
 
 ## Banco de dados
 
-* Integração com SQLite
-* Modelagem utilizando SQLAlchemy ORM
-* Criação das entidades:
+A aplicação utiliza SQLite durante o desenvolvimento.
+O SQLAlchemy é utilizado como ORM para modelagem e persistência das entidades.
+
+## Entidades
+
+Atualmente a aplicação trabalha principalmente com:
+
 * User
-* Relacionamentos utilizando Foreign Keys
-* Migrações com Alembic
+* Role
+* Post
 
----
-
-# Recursos da API
-
-## Usuários
-
-* Criar usuário
-* Listar usuários
-* Buscar usuário por ID
-* Atualizar usuário
-* Remover usuário
-
-Endpoints:
-
-```text
-GET     /users
-POST    /users
-GET     /users/<id>
-PATCH   /users/<id>
-DELETE  /users/<id>
+### Relacionamentos:
+```
+Role
+ │
+ └── 1:N ── User
+              │
+              └── 1:N ── Post
 ```
 
----
+**Um usuário pertence a uma Role e pode possuir vários Posts.**
+***Os Posts possuem uma relação com o usuário responsável pela publicação.***
 
-# Recursos estudados
+## Autenticação JWT
 
-Durante a implementação foram praticados conceitos importantes do ecossistema Flask:
+**A autenticação da API foi implementada utilizando JWT (JSON Web Token).**
 
-* Rotas
-* Blueprints
-* Request JSON
-* Response JSON
-* HTTP Status Code
-* SQLAlchemy ORM
-* Migrations
-* CLI Commands
-* SQLite
-* Organização em camadas
-* CRUD completo
-* Tratamento de exceções (IntegrityError)
+A autenticação permite:
 
----
+- login de usuários;
+- geração de access token;
+- proteção de endpoints;
+- identificação do usuário autenticado;
+- utilização do token através do header Authorization.
 
-# Estrutura do projeto
+Formato utilizado:
 
-```text
+**Authorization**: Bearer <access_token>
+
+A implementação inicial da autenticação está documentada na:
+
+[Release v0.1.0 — Autenticação JWT](https://github.com/userdanixdev/app_flask/releases#release-v0.1.0)
+
+## Autorização baseada em Roles
+
+Foi implementada uma estrutura de autorização baseada em Roles.
+
+*Atualmente a aplicação trabalha com diferentes níveis de acesso, permitindo diferenciar usuários administradores e usuários comuns.*
+
+A estrutura foi introduzida na:
+
+[Release v0.2.0 — Estrutura de Roles](https://github.com/userdanixdev/app_flask/releases#release-v0.2.0)
+
+## Decorator de permissões:
+
+A aplicação utiliza o decorator:
+
+> @requires_role('admin')
+
+para restringir determinados endpoints a usuários que possuem uma Role específica.
+
+*O decorator realiza a verificação da Role do usuário autenticado antes da execução da função protegida.*
+
+Exemplo:
+
+```
+@requires_role('admin')
+def update_user():
+    ...
+```
+
+A implementação foi adicionada na [Release v0.3.0 — Controle de permissões](https://github.com/userdanixdev/app_flask/releases#release-v0.3.0)
+
+## Posts:
+
+A aplicação possui um recurso de publicação de Posts.
+
+Funcionalidades:
+
+- criação de Posts;
+- listagem de Posts;
+- busca por ID;
+- atualização;
+- exclusão;
+- associação automática ao usuário autenticado;
+- autenticação JWT;
+- autorização baseada no proprietário do Post;
+- administradores possuem acesso aos Posts;
+- usuários comuns podem modificar apenas os próprios Posts.
+
+## Endpoints:
+
+Método | Endpoint |	Descrição 
+|--|--|--|
+POST|	/posts|	Criar um Post
+GET	|/posts|	Listar Posts
+GET	|/posts/<id>|	Buscar Post por ID
+PUT	|/posts/<id>|	Atualizar Post
+DELETE|	/posts/|<id>	Excluir Post
+
+A implementação dos Posts foi documentada na:
+
+[Release v0.4.0 — Posts e Controle de Acesso](https://github.com/userdanixdev/app_flask/releases#release-v0.4.0)
+
+## Usuários:
+
+A API disponibiliza operações para gerenciamento de usuários.
+
+Método	|Endpoint|	Descrição
+|--|--|--|
+GET|	/users|	Listar usuários
+POST|	/users|	Criar usuário
+GET	|/users/<id>|	Buscar usuário
+PATCH|	/users/<id>|	Atualizar usuário
+DELETE|	/users/<id>	|Remover usuário
+
+*O acesso aos endpoints é controlado de acordo com a autenticação e as permissões do usuário.*
+
+## Testes automatizados:
+
+O projeto possui uma estrutura de testes utilizando Pytest.
+
+Os testes de integração validam o comportamento da API através das rotas reais da aplicação, utilizando um banco SQLite em memória.
+
+### Estrutura das fixtures
+
+O arquivo conftest.py centraliza fixtures utilizadas pelos testes, incluindo:
+
+- criação da aplicação de teste;
+- banco SQLite em memória;
+- cliente HTTP;
+- usuário administrador;
+- usuário comum;
+- segundo usuário comum;
+- tokens JWT.
+
+Exemplo:
+```
+tests/
+│
+├── conftest.py
+│
+└── integration/
+    └── controllers/
+        ├── test_post.py
+        ├── test_role.py
+        └── test_user.py
+```        
+
+## Execução dos testes
+
+Para executar todos os testes de integração:
+
+```pytest tests/integration```
+
+Os testes verificam diferentes cenários, incluindo:
+
+- autenticação;
+- autorização;
+- criação de usuários;
+- busca de usuários;
+- criação de Posts;
+- atualização de Posts;
+- exclusão de Posts;
+- acesso sem autenticação;
+- acesso sem permissão;
+- recursos inexistentes;
+- criação de Roles;
+- duplicidade de Roles.
+
+Recursos estudados
+
+Durante o desenvolvimento foram praticados conceitos importantes do ecossistema Flask:
+
+* Flask;
+* Application Factory;
+* Blueprints;
+* rotas;
+* Request JSON;
+* Response JSON;
+* HTTP Status Codes;
+* SQLAlchemy ORM;
+* Foreign Keys;
+* relacionamentos;
+* Flask-Migrate;
+* Alembic;
+* SQLite;
+* JWT;
+* Roles;
+* autorização;
+* decorators;
+* CRUD;
+* tratamento de exceções;
+* IntegrityError;
+* Pytest;
+* fixtures;
+* testes de integração;
+* banco de dados em memória.
+
+## Estrutura do projeto:
+```
 app_flask/
-
 │
 ├── migrations/
 │
 ├── src/
 │   ├── controllers/
-│   │     ├── user.py
-│   │     └── post.py
+│   │   ├── user.py
+│   │   ├── post.py
+│   │   └── ...
 │   │
 │   ├── app.py
 │   ├── db.py
 │   └── schema.sql
+│
+├── tests/
+│   ├── conftest.py
+│   │
+│   └── integration/
+│       └── controllers/
+│           ├── test_post.py
+│           ├── test_role.py
+│           └── test_user.py
 │
 ├── instance/
 │
@@ -116,35 +276,18 @@ app_flask/
 ├── README.md
 └── hello.py
 ```
+## Migrações:
 
----
+O controle da estrutura do banco é realizado utilizando ```Flask-Migrate/Alembic.```
 
-# Modelo de dados
+- Criar uma migration
+```flask db migrate -m "Descrição da alteração"``` 
+- Aplicar migrations
+```flask db upgrade```
+- Reverter uma migration
+```flask db downgrade```
 
-## User
-
-| Campo    | Tipo    |
-| -------- | ------- |
-| id       | Integer |
-| username | String  |
-| email    | String  |
-| active   | Boolean |
-
----
-
-## Post
-
-| Campo     | Tipo        |
-| --------- | ----------- |
-| id        | Integer     |
-| title     | String      |
-| body      | String      |
-| created   | DateTime    |
-| author_id | Foreign Key |
-
----
-
-# Executando o projeto
+## Executando o projeto
 
 Clone o repositório
 
@@ -178,22 +321,6 @@ flask --app src.app run
 
 ---
 
-# Migrações
-
-Criar uma migration
-
-```bash
-flask db migrate -m "Descrição da alteração"
-```
-
-Aplicar as alterações
-
-```bash
-flask db upgrade
-```
-
----
-
 # Exemplo de requisição
 
 ### Criar usuário
@@ -218,26 +345,26 @@ Resposta
     "message": "User created"
 }
 ```
-
 ---
 
-# Conceitos praticados
+## Criar usuário:
 
-* Flask
-* APIs REST
-* CRUD
-* SQLAlchemy ORM
-* Flask CLI
-* Alembic
-* Migrations
-* SQLite
-* Organização em módulos
-* Application Factory Pattern
-* Blueprints
-* Tratamento de exceções
-* HTTP Status
+POST /users/
+```
+Body:
 
----
+{
+    "username": "Paul McCartney",
+    "email": "paul@example.com",
+    "password": "test",
+    "role_id": 1
+}
+```
+## Criar Post:
+```
+POST /posts/
+```
+> O usuário autenticado é associado automaticamente ao Post.
 
 # Objetivo
 
@@ -255,12 +382,12 @@ O **SQLite** é um banco de dados relacional embarcado (embedded), armazenando t
 
 ### Quando utilizar
 
-- Estudos e aprendizado
-- Desenvolvimento local
-- Protótipos
-- Aplicações pequenas
-- Testes automatizados
-- Sistemas com poucos acessos simultâneos
+- estudos;
+- desenvolvimento local;
+- protótipos;
+- aplicações pequenas;
+- testes automatizados;
+- ambientes com baixa concorrência.
 
 ### Vantagens
 
@@ -287,8 +414,7 @@ O **PostgreSQL** é um Sistema Gerenciador de Banco de Dados (SGBD) cliente-serv
 
 - APIs REST em produção
 - Sistemas corporativos
-- Aplicações com muitos usuários simultâneos
-- Projetos escaláveis
+- Aplicações com muitos usuários 
 - Ambientes em nuvem (AWS, Azure, GCP)
 
 ### Vantagens
@@ -331,8 +457,8 @@ Uma das principais vantagens do **SQLAlchemy ORM** é abstrair a comunicação c
 Os modelos permanecem praticamente iguais:
 
 ```python
-class User(db.Model):
-    id = mapped_column(Integer, primary_key=True)
+class Use r(db.Model):
+    id =  mapped_column(Integer, primary_key=True)
     username = mapped_column(String)
 ```
 
@@ -354,66 +480,31 @@ SQLALCHEMY_DATABASE_URI = (
 
 ---
 
-# Resumo
+## Histórico de Releases:
 
-- **SQLite** é ideal para estudos, desenvolvimento local e pequenos projetos.
-- **PostgreSQL** é recomendado para aplicações em produção, com maior volume de dados, múltiplos usuários e necessidade de escalabilidade.
-- Utilizando **SQLAlchemy ORM**, é possível migrar entre os dois bancos com poucas alterações no código da aplicação.
+[- v0.1.0 - Autenticação JWT](https://github.com/userdanixdev/app_flask/releases#release-v0.1.0)
 
-## 🔐 Autenticação JWT
+> Implementação da autenticação utilizando JWT.
 
-A autenticação da API foi implementada na versão **v0.1.0**.
+[- v0.2.0 - Estrutura de Roles](https://github.com/userdanixdev/app_flask/releases#release-v0.2.0)
 
-📖 Consulte os detalhes da implementação na **Release v0.1.0**:
-https://github.com/userdanixdev/app_flask/releases/tag/v0.1.0
+> Implementação da estrutura inicial de Roles para autorização.
 
-### 🔐 Autorização: Estrutura de Autorização e Gerenciamento de Roles
+[- v0.3.0 - Controle de permissões](https://github.com/userdanixdev/app_flask/releases#release-v0.3.0)
 
-Nesta versão foi implementada a estrutura inicial de autorização baseada em roles, preparando a aplicação para controle de acesso por nível de permissão.
+> Implementação do decorator para controle de acesso baseado em Roles.
 
-📖 Consulte os detalhes da implementação na **Release v0.2.0**:
-https://github.com/userdanixdev/app_flask/releases/tag/v0.2.0
+```@requires_role()```
 
-### 🔐 Autorização: Decoradores ( Permissões )
+[- v0.4.0 - Posts](https://github.com/userdanixdev/app_flask/releases#release-v0.4.0)
 
-Nessa feature temos a implementação do decorator `@requires_role()`. e controle de acesso baseado em Roles.
+> Implementação da entidade Post, CRUD completo, relacionamento User ↔ Post e regras de autorização.
 
-📖 Consulte os detalhes da implementação na **Release v0.3.0**:
-https://github.com/userdanixdev/app_flask/releases/tag/v0.3.0
+- v0.5.0 - Testes de integração
 
----
+> Implementação e organização da estrutura de testes de integração utilizando Pytest, fixtures e banco SQLite em memória.
 
-## 🚀 Nova Funcionalidade - Posts
+## Autor:
 
-### ✨ O que foi adicionado
+*Desenvolvido por Daniel como projeto de estudos em Flask, desenvolvimento Backend com Python, SQLAlchemy, autenticação, autorização e testes automatizados.*
 
-Implementação da entidade **Post**, permitindo que usuários autenticados criem e gerenciem publicações na API.
-
-### Funcionalidades
-
-* Implementação do modelo `Post`.
-* Relacionamento **User ↔ Post** (1:N).
-* CRUD de Posts.
-* Associação automática do post ao usuário autenticado.
-* Controle de autorização para edição e exclusão de posts.
-* Administradores possuem acesso total.
-* Usuários comuns podem modificar apenas os próprios posts.
-* Integração com autenticação JWT.
-
-### Endpoints
-
-| Método   | Endpoint      | Descrição             |
-| -------- | ------------- | --------------------- |
-| `POST`   | `/posts`      | Criar um novo post    |
-| `GET`    | `/posts`      | Listar todos os posts |
-| `GET`    | `/posts/<id>` | Buscar um post por ID |
-| `PUT`    | `/posts/<id>` | Atualizar um post     |
-| `DELETE` | `/posts/<id>` | Excluir um post       |
-
-📖 Consulte os detalhes da implementação na **Release v0.4.0**:
-
-https://github.com/userdanixdev/app_flask/releases/tag/v0.4.0
-
-## Autor
-
-Desenvolvido por **Daniel** como projeto de estudos em Flask e desenvolvimento Backend com Python.
