@@ -21,21 +21,6 @@ O projeto também contempla recursos de autenticação e autorização com JWT, 
 
 Embora tenha sido desenvolvido como um projeto de aprendizado e experimentação, sua estrutura busca seguir princípios de organização e desenvolvimento encontrados em aplicações profissionais, servindo também como laboratório prático para conceitos de Backend, APIs REST, persistência de dados, segurança e testes automatizados.
 
-## Tecnologias utilizadas:
-
-* Python
-* Flask
-* Flask-SQLAlchemy
-* SQLAlchemy 2.x
-* Flask-Migrate
-* Alembic
-* SQLite
-* Click (CLI)
-* Flask-JWT-Extended
-* Pytest
-* pytest-mock
-* Poetry
-
 ## Estrutura da aplicação
 
 * Application Factory Pattern
