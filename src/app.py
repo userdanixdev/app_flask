@@ -33,7 +33,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Role(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key = True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    name: Mapped[str] = mapped_column(String,unique=True, nullable=False)
     # Atualização para mapear permissões:
     user: Mapped[list["User"]] = relationship(back_populates="role")
 

@@ -3,8 +3,6 @@ from flask import Blueprint, request
 from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash
 
-
-
 auth_bp = Blueprint("auth",__name__, url_prefix="/auth")
 
 # Criar o método de login na WEB:
