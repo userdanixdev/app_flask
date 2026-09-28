@@ -13,11 +13,13 @@
 
 ## Sobre o projeto
 
-Este projeto foi desenvolvido com o objetivo de estudar os principais conceitos do framework **Flask** para desenvolvimento de aplicações web e APIs REST utilizando Python.
+Este projeto foi desenvolvido com o objetivo de aprofundar os principais conceitos do Flask para o desenvolvimento de aplicações web e APIs REST utilizando Python.
 
-Durante o desenvolvimento foram aplicadas diversas boas práticas utilizadas em projetos reais, como organização em módulos, utilização do padrão **Application Factory**, separação das rotas através de **Blueprints**, integração com banco de dados  utilizando **Flask-SQLAlchemy** e controle de versões do banco com **Flask-Migrate (Alembic)**. 
-mbora seja um projeto de estudos , sua estrutura segue padrões próximos aos encontrados em * aplicações profissionaisde.dedede  
+Durante sua construção, foram aplicadas práticas e padrões comuns no desenvolvimento de aplicações reais, incluindo organização modular, Application Factory, separação de rotas utilizando Blueprints, integração com banco de dados por meio do Flask-SQLAlchemy e gerenciamento da evolução do schema através do Flask-Migrate (Alembic).
 
+O projeto também contempla recursos de autenticação e autorização com JWT, controle de acesso baseado em roles, operações CRUD e uma suíte de testes de integração utilizando Pytest, permitindo validar a interação entre endpoints, regras de autorização, ORM e banco de dados.
+
+Embora tenha sido desenvolvido como um projeto de aprendizado e experimentação, sua estrutura busca seguir princípios de organização e desenvolvimento encontrados em aplicações profissionais, servindo também como laboratório prático para conceitos de Backend, APIs REST, persistência de dados, segurança e testes automatizados.
 *  
 *# Tecnologias utilizadas*** 
 
